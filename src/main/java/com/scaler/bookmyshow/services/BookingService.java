@@ -31,50 +31,32 @@ public class BookingService {
     @Autowired
     private BookingRepository bookingRepository;
     @Transactional
-    public Booking booking(Long userId, Long showId, List<Long> showSeatId) throws UserNotFoundException,
-            ShowNotFoundException, ShowSeatNotFoundException {
-        /*
-         Get User using userId
-         Get Show using showId
-         Check for Availability showSeat status
-         Select the seats
-         create booking object and store all booking related information
-         return boooking object
-         */
-        Optional<User> user=userRepository.getUserById(userId);
-        if(user.isEmpty()){
-            throw new UserNotFoundException("User is not existed");
-        }
-        User user1=user.get();
+    public Booking booking(Long userId, Long showId, List<Long> showSeatId) throws ShowSeatNotFoundException,
+            ShowNotFoundException, UserNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        Optional<Show> show=showRepository.getShowById(showId);
-        if(show.isEmpty()){
-            throw new ShowNotFoundException("Show is not present");
-        }
-        Show bookedShow=show.get();
+        Show show = showRepository.findById(showId)
+                .orElseThrow(() -> new ShowNotFoundException("Show not found"));
 
-        List<ShowSeat> showSeats=showSeatRepository.getAllShowSeatById(showSeatId);
-        //Check for availability status of showSeats
-        for(ShowSeat showSeat:showSeats){
-            if(!showSeat.getShowSeatStatus().equals(ShowSeatStatus.AVAILABLE)){
-                throw new ShowSeatNotFoundException("Please choose another ShowSeat");
+        List<ShowSeat> showSeats = showSeatRepository.findAllByIdInForUpdate(showSeatId);
+
+        for (ShowSeat seat : showSeats) {
+            if (!seat.getShowSeatStatus().equals(ShowSeatStatus.AVAILABLE)) {
+                throw new ShowSeatNotFoundException("Seat not available");
             }
+            seat.setShowSeatStatus(ShowSeatStatus.BLOCKED);
         }
-        List<ShowSeat> savedSeats=new ArrayList<>();
-        for(ShowSeat showSeat:showSeats){
-            if(showSeat.getShowSeatStatus().equals(ShowSeatStatus.AVAILABLE)){
-                showSeat.setShowSeatStatus(ShowSeatStatus.BLOCKED);
-                savedSeats.add(showSeatRepository.save(showSeat));
-            }
-        }
-        Booking booking=new Booking();
+
+        showSeatRepository.saveAll(showSeats);
+
+        Booking booking = new Booking();
         booking.setBookedAt(new Date());
         booking.setBookingStatus(BookingStatus.PENDING);
-        booking.setUser(user1);
-        booking.setShow(bookedShow);
-        booking.setShowSeats(savedSeats);
-        booking.setAmount(pricingService.calculatedPrice(savedSeats,bookedShow));
-
+        booking.setUser(user);
+        booking.setShow(show);
+        booking.setShowSeats(showSeats);
+        booking.setAmount(pricingService.calculatedPrice(showSeats, show));
 
         return bookingRepository.save(booking);
     }

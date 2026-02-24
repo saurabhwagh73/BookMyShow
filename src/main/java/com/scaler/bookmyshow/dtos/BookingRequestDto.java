@@ -6,7 +6,7 @@ import lombok.Setter;
 import java.util.List;
 @Getter
 @Setter
-public class bookingRequestDto {
+public class BookingRequestDto {
     private Long user_id;
     private Long show_id;
     private List<Long> showSeatId;

@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public interface ShowSeatTypeRepository extends JpaRepository<ShowSeatType,Long> {
-    List<ShowSeatType> findAllShowSeatTypeByShow(Show show);
+    List<ShowSeatType> findAllByShow(Show show);
 }

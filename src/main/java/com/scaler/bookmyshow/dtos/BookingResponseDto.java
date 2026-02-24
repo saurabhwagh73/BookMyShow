@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class bookingResponseDto {
+public class BookingResponseDto {
     private int amount;
     private Long bookingId;
     private ResponseStatus responseStatus;

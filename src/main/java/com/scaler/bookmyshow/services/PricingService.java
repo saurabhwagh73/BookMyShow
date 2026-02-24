@@ -18,11 +18,11 @@ public class PricingService {
     @Autowired
     private ShowSeatTypeRepository showSeatTypeRepository;
     public int calculatedPrice(List<ShowSeat> showSeats, Show show){
-        List<ShowSeatType> allSeatTypes=showSeatTypeRepository.findAllShowSeatTypeByShow(show);
+        List<ShowSeatType> allSeatTypes=showSeatTypeRepository.findAllByShow(show);
         int amount=0;
         for(ShowSeat showSeat:showSeats){
             for(ShowSeatType showSeatType:allSeatTypes ){
-                if(showSeat.getSeat().getSeatType().equals(showSeatType.getSeatType()){
+                if(showSeat.getSeat().getSeatType().equals(showSeatType.getSeatType())){
                     amount=showSeatType.getPrice();
                 }
             }

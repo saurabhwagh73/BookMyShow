@@ -1,20 +1,20 @@
 package com.scaler.bookmyshow.controllers;
 
+import com.scaler.bookmyshow.dtos.BookingRequestDto;
+import com.scaler.bookmyshow.dtos.BookingResponseDto;
 import com.scaler.bookmyshow.dtos.ResponseStatus;
-import com.scaler.bookmyshow.dtos.bookingRequestDto;
-import com.scaler.bookmyshow.dtos.bookingResponseDto;
 import com.scaler.bookmyshow.models.Booking;
 import com.scaler.bookmyshow.services.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class bookingController {
+public class BookingController {
     @Autowired
     private BookingService bookingservice;
 
-    public bookingResponseDto bookMovie(bookingRequestDto requestDto){
-        bookingResponseDto responseDto=new bookingResponseDto();
+    public BookingResponseDto bookMovie(BookingRequestDto requestDto){
+        BookingResponseDto responseDto=new BookingResponseDto();
         Booking booking;
         try{
             booking=bookingservice.booking(requestDto.getUser_id(),
