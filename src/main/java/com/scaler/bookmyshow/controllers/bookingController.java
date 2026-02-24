@@ -4,14 +4,14 @@ import com.scaler.bookmyshow.dtos.ResponseStatus;
 import com.scaler.bookmyshow.dtos.bookingRequestDto;
 import com.scaler.bookmyshow.dtos.bookingResponseDto;
 import com.scaler.bookmyshow.models.Booking;
-import com.scaler.bookmyshow.services.bookingService;
+import com.scaler.bookmyshow.services.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller
 public class bookingController {
     @Autowired
-    private bookingService bookingservice;
+    private BookingService bookingservice;
 
     public bookingResponseDto bookMovie(bookingRequestDto requestDto){
         bookingResponseDto responseDto=new bookingResponseDto();
